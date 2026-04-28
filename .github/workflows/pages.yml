@@ -37,7 +37,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           # Publish the entire repo root — index.html, script.js, styles.css,
           # admin/dist (built above), live-display, manifest, sw, etc.
