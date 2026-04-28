@@ -6,12 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b0b0c" />
     <title>CxE EMEA Admin</title>
-    <script type="module" crossorigin src="./assets/index-Bo4bEhzd.js"></script>
+    <!-- CSP: defense-in-depth. Admin SPA is bundled (no inline scripts at runtime),
+         but Vite/React do inject inline styles, so style-src keeps 'unsafe-inline'. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
+    <script type="module" crossorigin src="./assets/index-zBbZvkEq.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/react-GSpnOOHj.js">
     <link rel="modulepreload" crossorigin href="./assets/charts-Bh4nMLL1.js">
     <link rel="modulepreload" crossorigin href="./assets/supabase-CUQpzalg.js">
     <link rel="modulepreload" crossorigin href="./assets/forms-BfkKGw5U.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-SptWBdYd.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-CliMHHJD.css">
   </head>
   <body>
     <div id="root"></div>

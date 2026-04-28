@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b0b0c" />
     <title>CxE EMEA Admin</title>
+    <!-- CSP: defense-in-depth. Admin SPA is bundled (no inline scripts at runtime),
+         but Vite/React do inject inline styles, so style-src keeps 'unsafe-inline'. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
   </head>
   <body>
     <div id="root"></div>

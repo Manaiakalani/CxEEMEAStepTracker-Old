@@ -10,6 +10,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [3.0.0-emea] - 2026 EMEA refresh
 
+### 🔒 Security & privacy hardening (post-public audit)
+- **Fixed XSS in live display** (`live-display/display.js`): user-controlled `name`, `team`, `message`, and `timeAgo` strings rendered into `innerHTML` are now run through a new `escapeHTML()` helper. Previously a participant could register a display name like `<img src=x onerror=…>` and it would execute on the kiosk.
+- **Validated `postMessage` origin** in the live display so a hostile framing page cannot trigger Supabase reads.
+- **Added Content-Security-Policy** `<meta>` tags to `index.html`, `live-display/index.html`, and `admin/index.html`. `frame-ancestors 'none'` blocks clickjacking; `connect-src` restricts data exfiltration to Supabase + Open-Meteo only; `object-src 'none'` blocks Flash/plugins.
+- **Truthful privacy copy**: rewrote the FAQ "data deletion" claim. The previous wording promised automated deletion within 14 days, but the repo has no scheduled cleanup job — it now accurately describes the manual purge by event organisers and the existing user-initiated "Clear my data" path.
+
 ### 🚀 Hosting & security
 - **Migrated from Azure Static Web Apps to GitHub Pages** (`.github/workflows/pages.yml`). Deploys on every push to `main`, builds the admin SPA in CI, publishes the whole repo root as the Pages artifact. Removed `azure-static-web-apps-yellow-bay-0aace901e.yml`.
 - **Resolved 2 Dependabot alerts**: bumped Vite `^5.4.9 → ^6.4.2` (CVE: optimized deps `.map` path traversal) which transitively brings esbuild to `0.25.12` (CVE: dev-server CORS).
