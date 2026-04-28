@@ -1,0 +1,228 @@
+/* ==========================================================================
+   Accessibility Enhancements for CxE EMEA Step Tracker
+   Standalone stylesheet — do not modify existing styles.css
+   ========================================================================== */
+
+/* --- Screen-reader-only utility --- */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* --- Skip-to-content link --- */
+.a11y-skip-link {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100000;
+    padding: 0.75rem 1.5rem;
+    background: var(--ms-blue, #0078d4);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    border: 2px solid #fff;
+    border-radius: 0 0 0.5rem 0.5rem;
+    text-decoration: none;
+    outline: none;
+    transition: top var(--transition-fast, 0.2s) ease;
+}
+
+.a11y-skip-link:focus {
+    top: 0;
+}
+
+/* --- Focus indicators (`:focus-visible` for modern browsers) --- */
+*:focus-visible {
+    outline: 2px solid var(--ms-blue, #0078d4) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px rgba(0, 120, 212, 0.25) !important;
+}
+
+/* Buttons, links, and inputs get consistent focus ring */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--ms-blue, #0078d4) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px rgba(0, 120, 212, 0.25) !important;
+    border-radius: inherit;
+}
+
+/* Nav tabs focus ring */
+.nav-btn:focus-visible {
+    outline: 2px solid #fff !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px rgba(0, 120, 212, 0.4) !important;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] *:focus-visible {
+    outline-color: #4da6ff !important;
+    box-shadow: 0 0 0 4px rgba(77, 166, 255, 0.3) !important;
+}
+
+/* --- Reduced-motion toggle button --- */
+.a11y-motion-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.6rem;
+    background: transparent;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+    border-radius: 0.4rem;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+    font-size: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.a11y-motion-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.a11y-motion-toggle[aria-pressed="true"] {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-color: var(--ms-blue, #0078d4);
+}
+
+.a11y-motion-toggle i {
+    font-size: 0.8rem;
+}
+
+/* --- Reduced motion: system preference --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0s !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* --- Reduced motion: user toggle --- */
+.a11y-reduce-motion *,
+.a11y-reduce-motion *::before,
+.a11y-reduce-motion *::after {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+}
+
+/* --- Keyboard shortcuts info panel --- */
+.a11y-shortcuts-info {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 99999;
+}
+
+.a11y-shortcuts-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 1px solid var(--border-color, #e5e7eb);
+    background: var(--bg-card, #fff);
+    color: var(--text-secondary, #6b7280);
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.a11y-shortcuts-btn:hover {
+    background: var(--ms-blue, #0078d4);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.a11y-shortcuts-panel {
+    display: none;
+    position: absolute;
+    bottom: 3rem;
+    right: 0;
+    width: 220px;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    font-family: 'Inter', sans-serif;
+}
+
+.a11y-shortcuts-panel.open {
+    display: block;
+}
+
+.a11y-shortcuts-panel h4 {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-primary, #1f2937);
+}
+
+.a11y-shortcuts-panel dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 0.75rem;
+    font-size: 0.78rem;
+}
+
+.a11y-shortcuts-panel dt {
+    color: var(--text-secondary, #6b7280);
+}
+
+.a11y-shortcuts-panel dd {
+    margin: 0;
+    color: var(--text-primary, #1f2937);
+}
+
+.a11y-shortcuts-panel kbd {
+    display: inline-block;
+    padding: 0.1rem 0.35rem;
+    background: var(--bg-card, #f3f4f6);
+    border: 1px solid var(--border-color, #d1d5db);
+    border-radius: 0.25rem;
+    font-size: 0.7rem;
+    font-family: monospace;
+    line-height: 1.4;
+}
+
+[data-theme="dark"] .a11y-shortcuts-panel {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .a11y-shortcuts-panel kbd {
+    background: #334155;
+    border-color: #475569;
+}
+
+/* Hide the shortcuts button on very small screens to avoid clutter */
+@media (max-width: 360px) {
+    .a11y-shortcuts-info {
+        display: none;
+    }
+}

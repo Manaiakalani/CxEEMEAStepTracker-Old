@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="description" content="Track your daily steps and compete with colleagues during CxE EMEA Offsite 2026">
+    <meta name="keywords" content="step tracker, fitness, competition, Microsoft, CxE EMEA">
+    <meta name="author" content="CxE EMEA Team">
+    <meta name="theme-color" content="#2E5A88">
+    
+    <title>CxE EMEA Offsite - Step Tracker</title>
+    
+    <!-- Optimized favicon setup -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.svg">
+    <meta name="msapplication-TileColor" content="#2E5A88">
+    <meta name="msapplication-TileImage" content="favicon.svg">
+    
+    <!-- PWA and mobile specific -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Step Tracker">
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="gamification.css">
+    <link rel="stylesheet" href="data-viz.css">
+    <link rel="stylesheet" href="a11y.css">
+    <!-- Fonts: preload + display swap. Fraunces (display) for headings,
+         Inter (body) for everything else. Both via Google Fonts. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-walking"></i>
+                        <h1>CxE EMEA Offsite 2026</h1>
+                    </div>
+                    <div class="header-stats">
+                        <div class="spotify-widget" id="spotifyWidget">
+                            <div class="spotify-icon">
+                                <i class="fab fa-spotify"></i>
+                            </div>
+                            <div class="spotify-info">
+                                <div class="spotify-label">Offsite Playlist</div>
+                                <div class="spotify-link" id="spotifyLink">CxE EMEA 2026</div>
+                            </div>
+                        </div>
+                        <div class="weather-info" id="weatherInfo">
+                            <div class="weather-location">Munich, DE</div>
+                            <div class="weather-temp" id="weatherTemp">--°C / --°F</div>
+                            <div class="weather-advice" id="weatherAdvice">Loading...</div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Steps</span>
+                            <span class="stat-value" id="totalSteps">0</span>
+                        </div>
+                        <button id="hamburgerMenu" class="hamburger-menu" title="Menu" aria-expanded="false" aria-controls="hamburgerFlyout">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="container">
+                <div class="nav-buttons">
+                                            <button class="nav-btn active" data-tab="dashboard" aria-label="Go to Dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </button>
+                        <button class="nav-btn" data-tab="leaderboard" aria-label="Go to Leaderboard">
+                            <i class="fas fa-trophy"></i>
+                            <span>Leaderboard</span>
+                        </button>
+                        <button class="nav-btn" data-tab="teams" aria-label="Go to Teams">
+                            <i class="fas fa-users"></i>
+                            <span>Teams</span>
+                        </button>
+                        <button class="nav-btn" data-tab="profile" aria-label="Go to Profile">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hamburger Menu Flyout (outside container for proper fixed positioning) -->
+        <div id="hamburgerFlyout" class="hamburger-flyout" role="dialog" aria-modal="true" aria-labelledby="menu-title" aria-hidden="true" tabindex="-1">
+            <div class="flyout-content">
+                <div class="flyout-header">
+                    <h2 id="menu-title">Menu</h2>
+                    <button id="closeFlyout" class="close-flyout" aria-label="Close menu">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+                
+                <div class="flyout-body">
+                    <div class="flyout-menu" role="menu">
+                    <!-- Mobile-only slot: widgets moved here from header at ≤480px -->
+                    <div id="flyoutMobileWidgets" class="flyout-mobile-widgets" aria-hidden="true"></div>
+                    <div class="flyout-divider"></div>
+                    <button class="flyout-item" id="toggleDarkModeMenu" role="menuitem" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon" id="darkModeMenuIcon" aria-hidden="true"></i>
+                        <span>Toggle Dark Mode</span>
+                    </button>
+                    <button class="flyout-item" id="showFAQ" role="menuitem" aria-label="View frequently asked questions">
+                        <i class="fas fa-question-circle" aria-hidden="true"></i>
+                        <span>FAQ & Info</span>
+                    </button>
+                    <button class="flyout-item" id="fileFeedback" role="menuitem" aria-label="Report a bug or issue">
+                        <i class="fas fa-bug" aria-hidden="true"></i>
+                        <span>Report a Bug</span>
+                    </button>
+                    <button class="flyout-item" id="fileFeature" role="menuitem" aria-label="Request a new feature">
+                        <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                        <span>Request Feature</span>
+                    </button>
+                    <button class="flyout-item" id="viewGitHub" role="menuitem" aria-label="View this project on GitHub">
+                        <i class="fab fa-github" aria-hidden="true"></i>
+                        <span>View this project on GitHub</span>
+                    </button>
+                    <div class="flyout-divider"></div>
+                    <button class="flyout-item" id="cloudSyncToggle" role="menuitem" aria-label="Cloud sync status and settings">
+                        <i class="fas fa-cloud" aria-hidden="true"></i>
+                        <span>Cloud Sync: <span id="cloudSyncStatus">Local</span></span>
+                    </button>
+                    <button class="flyout-item" id="adminLogin" role="menuitem" aria-label="Admin access">
+                        <i class="fas fa-user-shield" aria-hidden="true"></i>
+                        <span>Admin Login</span>
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Welcome Screen -->
+                <div id="welcomeScreen" class="welcome-screen">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">
+                            <i class="fas fa-walking"></i>
+                        </div>
+                        <h2>Welcome to CxE EMEA Offsite 2026!</h2>
+                        <p>Track your daily steps and compete with your colleagues during our CxE EMEA Offsite 2026 week.</p>
+                        
+                        <!-- Existing User Selection -->
+                        <div id="existingUserSection" class="existing-user-section" style="display: none;">
+                            <h3 class="section-title"><svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg><span class="section-title-text">Welcome back!</span></h3>
+                            <p>Select your name to continue:</p>
+                            <div class="form-group">
+                                <select id="existingUserSelect" class="form-control">
+                                    <option value="">Choose your name...</option>
+                                </select>
+                            </div>
+                            <div class="buttons">
+                                <button id="selectUserBtn" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Continue
+                                </button>
+                                <button id="registerNewUserBtn" class="btn btn-secondary">
+                                    <i class="fas fa-user-plus"></i>
+                                    Register New User
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="registrationSection" class="registration-section">
+                            <h3 id="registrationTitle" class="section-title"><svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" x2="20" y1="8" y2="14"/><line x1="23" x2="17" y1="11" y2="11"/></svg><span class="section-title-text">New User Registration</span></h3>
+                        <form id="registerForm" class="register-form">
+                            <div class="form-group">
+                                <label for="userName">Your Name</label>
+                                <input type="text" id="userName" required placeholder="Enter your full name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="userTeam">Select Your Team</label>
+                                <select id="userTeam" required>
+                                    <option value="">Choose a team...</option>
+                                    <option value="CARE">CARE</option>
+                                    <option value="CCP">CCP</option>
+                                    <option value="CxE LT">CxE LT</option>
+                                    <option value="IDNA">IDNA</option>
+                                    <option value="Management">Management</option>
+                                    <option value="Purview/CES">Purview/CES</option>
+                                    <option value="Scale Enablement">Scale Enablement</option>
+                                    <option value="Shared Services">Shared Services</option>
+                                    <option value="Threat Protection">Threat Protection</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="dailyGoal">Daily Step Goal</label>
+                                <select id="dailyGoal">
+                                    <option value="5000">5,000 steps (Light)</option>
+                                    <option value="8000" selected>8,000 steps (Moderate)</option>
+                                    <option value="10000">10,000 steps (Active)</option>
+                                    <option value="12000">12,000 steps (Champion)</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-rocket"></i>
+                                Get Started!
+                            </button>
+                        </form>
+                        
+                        <div id="backToSelectionBtn" style="display: none; margin-top: 15px;">
+                            <button id="backToSelection" class="btn btn-link">
+                                <i class="fas fa-arrow-left"></i>
+                                Back to User Selection
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="dashboardTab" class="tab-content">
+                    <div class="dashboard-header">
+                        <h2><span id="dynamicGreeting">Hello</span>, <span id="userDisplayName">User</span>!</h2>
+                        <p class="dashboard-subtitle" id="motivationalPhrase">Let's make today count with every step!</p>
+                    </div>
+
+                    <!-- Quick Add Steps -->
+                    <div class="quick-add-card">
+                        <h3>Add Today's Steps</h3>
+                        <div class="step-input-container">
+                            <input type="number" id="stepsInput" placeholder="Enter steps" min="0" max="50000">
+                            <button id="addStepsBtn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Add Steps
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Widget -->
+                    <div class="recent-activity-card">
+                        <div class="activity-header">
+                            <h3>Recent Activity</h3>
+                            <button id="refreshActivity" class="refresh-activity-btn" title="Refresh recent activity">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div id="recentActivityList" class="recent-activity-list">
+                            <div class="no-activity">
+                                <i class="fas fa-clock"></i>
+                                <span>No recent activity</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Today's Progress -->
+                    <div class="progress-card">
+                        <div class="progress-header">
+                            <h3>Today's Progress</h3>
+                            <span class="date" id="currentDate"></span>
+                        </div>
+                        <div class="progress-circle-container">
+                            <div class="progress-circle">
+                                <svg width="120" height="120">
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#10b981" stroke-width="8" 
+                                            stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" 
+                                            id="progressCircle" transform="rotate(-90 60 60)"/>
+                                </svg>
+                                <div class="progress-text">
+                                    <div class="progress-steps" id="todaySteps">0</div>
+                                    <div class="progress-label">steps</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-details">
+                            <div class="progress-item">
+                                <span class="progress-label">Goal</span>
+                                <span class="progress-value" id="dailyGoalDisplay">8,000</span>
+                            </div>
+                            <div class="progress-item">
+                                <span class="progress-label">Remaining</span>
+                                <span class="progress-value" id="remainingSteps">8,000</span>
+                            </div>
+                            <div class="progress-item">
+                                <span class="progress-label">Progress</span>
+                                <span class="progress-value" id="progressPercentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Challenges -->
+                    <div class="challenges-card">
+                        <h3>Active Challenges</h3>
+                        <div class="challenges-container" id="challengesContainer">
+                            <!-- Challenges will be generated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Weekly Overview -->
+                    <div class="weekly-card">
+                        <h3>This Week</h3>
+                        <div class="weekly-chart" id="weeklyChart">
+                            <!-- Weekly bars will be generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Tab -->
+                <div id="leaderboardTab" class="tab-content" style="display: none;">
+                    <div class="leaderboard-header">
+                        <h2>Leaderboard</h2>
+                        <div class="leaderboard-tabs">
+                            <button class="leaderboard-tab-btn active" data-period="today">Today</button>
+                            <button class="leaderboard-tab-btn" data-period="week">This Week</button>
+                            <button class="leaderboard-tab-btn" data-period="total">All Time</button>
+                            <button class="leaderboard-tab-btn live-display-btn" id="liveDisplayBtn">📺 Live Display</button>
+                            <button class="leaderboard-tab-btn refresh-btn seamless-refresh" id="refreshLeaderboard" title="Refresh data from database">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="leaderboard-container">
+                        <div id="leaderboardList" class="leaderboard-list">
+                            <!-- Leaderboard items will be generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teams Tab -->
+                <div id="teamsTab" class="tab-content" style="display: none;">
+                    <div class="teams-header">
+                        <h2>Team Competition</h2>
+                        <p>See how your team stacks up against the competition!</p>
+                    </div>
+                    
+                    <div class="team-stats-container">
+                        <div id="teamLeaderboard" class="team-leaderboard">
+                            <!-- Team leaderboard will be generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profileTab" class="tab-content" style="display: none;">
+                    <div class="profile-header">
+                        <h2>Your Profile</h2>
+                    </div>
+                    
+                    <div class="profile-card">
+                        <div class="profile-info">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="profile-details">
+                                <h3 id="profileName">User Name</h3>
+                                <p id="profileTeam">Team Name</p>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-walking"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-number" id="profileTotalSteps">0</span>
+                                    <span class="stat-label">Total Steps</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-number" id="profileAvgSteps">0</span>
+                                    <span class="stat-label">Daily Average</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-number" id="profileRank">#0</span>
+                                    <span class="stat-label">Current Rank</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <button id="addPreviousDayBtn" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus"></i>
+                                Add Previous Day
+                            </button>
+                            <button id="editGoalBtn" class="btn btn-secondary">
+                                <i class="fas fa-edit"></i>
+                                Edit Daily Goal
+                            </button>
+                            <button id="changeTeamBtn" class="btn btn-secondary">
+                                <i class="fas fa-users"></i>
+                                Change Team
+                            </button>
+                            <button id="resetDataBtn" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                                Reset Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p class="footer-text">Made with <span class="heart-emoji">❤️</span> in Munich, DE</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <!-- Live Notifications -->
+    <div id="liveNotifications" class="live-notifications"></div>
+
+    <!-- FAQ/Disclaimer Modal -->
+    <div id="faqModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>FAQ & Information</h2>
+                <button id="closeFAQ" class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="faq-section privacy-notice">
+                    <h3><i class="fas fa-shield-alt" style="color: var(--ms-blue); margin-right: 0.5rem;"></i>Privacy & Data Usage Notice</h3>
+                    <div style="background: rgba(var(--ms-blue-rgb), 0.1); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid var(--ms-blue);">
+                        <p><strong>Your Privacy Matters:</strong> Any information you provide (name/username and step data) is used exclusively for the purpose of team morale and engagement during the CxE EMEA Offsite 2026 event.</p>
+                        <p><strong>Data Usage:</strong> Your name/username and steps are only identified and used for the step tracking game throughout the week. This data is stored securely and will be permanently deleted less than 14 days after the offsite is completed.</p>
+                        <p><strong>Minimal Data:</strong> We only collect what's necessary - your chosen display name and step counts. No personal information, location data, or device information is stored.</p>
+                    </div>
+                </div>
+
+                <div class="faq-section">
+                    <h3>About This App</h3>
+                    <p>The CxE EMEA Offsite 2026 Step Tracker is a comprehensive, interactive application designed to encourage physical activity and team engagement during our offsite event. Features include:</p>
+                    <ul>
+                        <li><strong>Personal Dashboard:</strong> Track daily steps, view progress, and monitor achievements</li>
+                        <li><strong>Team Competition:</strong> Join teams and compete with colleagues</li>
+                        <li><strong>Live Leaderboards:</strong> Real-time individual and team rankings</li>
+                        <li><strong>Activity Feed:</strong> See recent activities with colorful icons</li>
+                        <li><strong>Live Display:</strong> Large-screen display perfect for presentations and events</li>
+                        <li><strong>Cloud Sync:</strong> Automatic data synchronization across devices</li>
+                        <li><strong>Mobile Optimized:</strong> Works seamlessly on phones, tablets, and desktops</li>
+                        <li><strong>Admin Tools:</strong> Administrative dashboard for event management</li>
+                    </ul>
+                </div>
+
+                <div class="faq-section">
+                    <h3>Technologies Used</h3>
+                    <ul>
+                        <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript (ES6+) with responsive design</li>
+                        <li><strong>Database:</strong> Supabase PostgreSQL with real-time synchronization</li>
+                        <li><strong>Storage:</strong> Cloud-first architecture with localStorage fallback</li>
+                        <li><strong>Icons:</strong> Font Awesome with color-coded activity types</li>
+                        <li><strong>Fonts:</strong> Google Fonts (Inter) for modern typography</li>
+                        <li><strong>Real-time Features:</strong> Auto-refresh, live activity feeds, connection monitoring</li>
+                        <li><strong>PWA Ready:</strong> Service worker for offline capabilities</li>
+                    </ul>
+                </div>
+
+                <div class="faq-section">
+                    <h3>Data Storage & Sync</h3>
+                    <p><strong>Cloud-First Architecture:</strong> Your data is primarily stored in a secure cloud database (Supabase) for reliable access across devices and real-time synchronization with teammates.</p>
+                    <p><strong>Smart Fallback:</strong> If cloud connection is unavailable, data is stored locally in your browser and automatically synced when connection is restored.</p>
+                    <p><strong>Real-time Sync:</strong> Changes are instantly shared across all your devices and reflected in team leaderboards and activity feeds.</p>
+                    <p><strong>Connection Monitoring:</strong> The app automatically monitors your connection and switches between cloud and local storage as needed.</p>
+                    <p><strong>Data Security:</strong> All data is encrypted in transit and stored securely. Only your display name and step counts are stored - no personal information.</p>
+                </div>
+
+                <div class="faq-section">
+                    <h3>Frequently Asked Questions</h3>
+                    <div class="faq-item">
+                        <strong>Q: How accurate is the step tracking?</strong>
+                        <p>A: This app requires manual step entry from your fitness tracker, phone app, or smartwatch.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>Q: Can I see other people's steps?</strong>
+                        <p>A: You can see everyone's steps in the leaderboards and team statistics - this creates friendly competition and team engagement! Individual activity details are visible in the activity feeds with colorful icons.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>Q: What happens to my data after the offsite?</strong>
+                        <p>A: All data will be permanently deleted less than 14 days after the offsite ends. You can also manually clear your data anytime from the Profile section.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>Q: I lost my data, can it be recovered?</strong>
+                        <p>A: With cloud sync enabled (default), your data is automatically backed up and synced across devices. If you clear browser data, simply reload the page and your cloud data will be restored.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>Q: How often does the data refresh?</strong>
+                        <p>A: The app uses real-time synchronization! New activities appear immediately when added, leaderboards auto-refresh every 5 minutes, and the Live Display updates every 30 seconds.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>Q: Does this work on mobile devices?</strong>
+                        <p>A: Absolutely! The app is fully responsive with touch-friendly controls, mobile-optimized layouts, and works great on phones, tablets, and desktops.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>Q: What is the Live Display feature?</strong>
+                        <p>A: The Live Display is perfect for projecting during events. It shows real-time leaderboards, team stats, and activity feeds with auto-refresh and connection monitoring.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>Q: What are the colorful icons in activities?</strong>
+                        <p>A: Activities now have color-coded FontAwesome icons! Green for steps, gold for achievements, cyan for new users, purple for team changes, orange for overachievers, and more.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>Q: Can administrators manage the system?</strong>
+                        <p>A: Yes! The Admin Dashboard provides comprehensive management tools, user oversight, manual step entry, system diagnostics, and database testing to ensure the app is running great throughout the week. Have an issue, let Max Stein or one of our great CxE admins know.</p>
+                    </div>
+                </div>
+
+                <div class="faq-section disclaimer">
+                    <h3>Important Information</h3>
+                    <p><strong>Event Purpose:</strong> This app is designed exclusively for the CxE EMEA Offsite 2026 event to boost team morale and encourage physical activity during the week.</p>
+                    <p><strong>Data Lifecycle:</strong> All participant data will be permanently and securely deleted less than 14 days after the offsite concludes. No data will be retained beyond this period.</p>
+                    <p><strong>Voluntary Participation:</strong> Participation in the step tracking challenge is entirely voluntary and for entertainment purposes only.</p>
+                    <p><strong>No Warranty:</strong> This application is provided "as-is" for team building and motivational purposes without any warranties.</p>
+                    <p><strong>Health Disclaimer:</strong> This is a fun team activity, not medical advice. Please consult healthcare providers for fitness guidance. Step tracking is for motivation and team engagement only.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Previous Day Modal -->
+    <div id="addPreviousDayModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Steps for Previous Day</h2>
+                <button id="closeAddPreviousDay" class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPreviousDayForm">
+                    <div class="form-group">
+                        <label for="previousDayDate">Select Date</label>
+                        <input type="date" id="previousDayDate" name="previousDayDate" required>
+                        <small class="form-help">Choose a previous date to add steps for</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="previousDaySteps">Steps</label>
+                        <input type="number" id="previousDaySteps" name="previousDaySteps" min="0" max="100000" step="1" placeholder="Enter steps for this day" required>
+                        <small class="form-help">Enter the number of steps for the selected date</small>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelAddPreviousDay">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Add Steps
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script src="gamification.js"></script>
+    <script src="web-share.js"></script>
+    <script src="data-viz.js"></script>
+    <script src="a11y.js"></script>
+    <script src="perf-security.js"></script>
+</body>
+</html>

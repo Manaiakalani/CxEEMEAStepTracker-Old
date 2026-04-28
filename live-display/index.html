@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CxE EMEA Offsite 2026 - Live Leaderboard Display</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="Live leaderboard display for CxE EMEA Offsite 2026 Step Tracker">
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+</head>
+<body>
+    <div class="live-display">
+        <!-- Header Section -->
+        <header class="display-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <i class="fas fa-walking"></i>
+                    <div class="title-group">
+                        <h1>CxE EMEA Offsite 2026</h1>
+                        <p>Live Step Tracking Leaderboard</p>
+                    </div>
+                </div>
+                <div class="status-indicators">
+                    <button class="manual-refresh-btn" id="manualRefreshBtn" title="Refresh Now">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh Now
+                    </button>
+                    <div class="refresh-status">
+                        <i class="fas fa-sync-alt"></i>
+                        Auto-refresh: 30s
+                    </div>
+                    <div class="update-indicator">
+                        <i class="fas fa-clock"></i>
+                        <span id="lastUpdate" data-clock-ready="false" aria-live="polite"></span>
+                    </div>
+                    <div class="live-indicator">
+                        <div class="pulse-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="display-main">
+            <!-- Stats Overview -->
+            <section class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div class="stat-label">Active Participants</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shoe-prints"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalSteps">0</div>
+                        <div class="stat-label">Total Steps Today</div>
+                    </div>
+                </div>
+                <div class="stat-card challenges-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="completedChallenges">0</div>
+                        <div class="stat-label">Challenges Completed</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- The Stomp - Aggregate Steps Widget -->
+            <section class="stomp-widget">
+                <div class="stomp-card">
+                    <div class="stomp-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stomp-content">
+                        <div class="stomp-title">THE STOMP</div>
+                        <div class="stomp-number" id="totalOffsiteSteps">0</div>
+                        <div class="stomp-label">Total Steps During Offsite</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activity Feed -->
+            <section class="activity-feed">
+                <div class="feed-header">
+                    <h2>
+                        <i class="fas fa-bolt"></i>
+                        Live Activity Feed
+                    </h2>
+                    <div class="feed-controls">
+                        <span class="activity-count" id="activityCount">0 recent activities</span>
+                        <div class="refresh-indicator">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="feed-content" id="activityFeed">
+                    <!-- Activity items will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Leaderboards Section -->
+            <section class="leaderboards-section">
+                <!-- Individual Leaderboard -->
+                <div class="leaderboard-container">
+                    <div class="leaderboard-header">
+                        <h2><i class="fas fa-user"></i> Top Individuals</h2>
+                        <div class="refresh-indicator">
+                            <i class="fas fa-sync-alt" id="individualRefresh"></i>
+                        </div>
+                    </div>
+                    <div class="leaderboard-content" id="individualLeaderboard">
+                        <!-- Individual rankings will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Team Leaderboard -->
+                <div class="leaderboard-container">
+                    <div class="leaderboard-header">
+                        <h2><i class="fas fa-users"></i> Team Rankings</h2>
+                        <div class="refresh-indicator">
+                            <i class="fas fa-sync-alt" id="teamRefresh"></i>
+                        </div>
+                    </div>
+                    <div class="leaderboard-content" id="teamLeaderboard">
+                        <!-- Team rankings will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Overall Top Individual (Weekly) -->
+                <div class="leaderboard-container weekly-champion">
+                    <div class="leaderboard-header">
+                        <h2><i class="fas fa-crown"></i> Weekly Champion</h2>
+                        <div class="refresh-indicator">
+                            <i class="fas fa-sync-alt" id="weeklyRefresh"></i>
+                        </div>
+                    </div>
+                    <div class="leaderboard-content" id="weeklyChampion">
+                        <!-- Weekly top individual will be populated here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="display-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    Made with <i class="fas fa-heart"></i> in Munich, DE for CxE EMEA
+                </div>
+                <button class="footer-debug-btn" id="debugTestBtn" title="Debug Test">
+                    <i class="fas fa-bug"></i>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Loading Live Data...</h3>
+            <p>Connecting to step tracker...</p>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="error-modal" id="errorModal">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Connection Error</h3>
+            <p id="errorMessage">Unable to connect to the step tracker data source.</p>
+            <button class="retry-btn" id="retryBtn">
+                <i class="fas fa-redo"></i> Retry Connection
+            </button>
+        </div>
+    </div>
+
+    <script src="../supabase-config.js"></script>
+    <script src="display.js"></script>
+</body>
+</html>

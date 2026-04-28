@@ -1,0 +1,355 @@
+/* ============================================
+   Data Viz Enhancements — data-viz.css
+   Standalone styles for trend lines, rank arrows,
+   step heatmap calendar, and pace indicator.
+   ============================================ */
+
+/* ---------- 1. Trend Line SVG Overlay ---------- */
+.weekly-card {
+    position: relative;
+}
+
+.weekly-chart {
+    position: relative;
+}
+
+.dv-trend-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.dv-trend-line {
+    fill: none;
+    stroke: var(--ms-blue);
+    stroke-opacity: 0.5;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.dv-trend-dot {
+    fill: var(--ms-blue);
+    fill-opacity: 0.7;
+    stroke: var(--bg-card, white);
+    stroke-width: 1.5;
+}
+
+/* Animate the trend line drawing */
+@keyframes dv-draw-line {
+    from { stroke-dashoffset: var(--dv-line-len); }
+    to   { stroke-dashoffset: 0; }
+}
+
+@keyframes dv-fade-in {
+    from { opacity: 0; transform: scale(0); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.dv-trend-line.dv-animate {
+    animation: dv-draw-line 1s ease-out forwards;
+}
+
+.dv-trend-dot.dv-animate {
+    opacity: 0;
+    animation: dv-fade-in 0.3s ease-out forwards;
+}
+
+/* ---------- 2. Rank Movement Arrows ---------- */
+.dv-rank-movement {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.35rem;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.dv-rank-movement.dv-up {
+    color: var(--ms-green, #107c10);
+}
+
+.dv-rank-movement.dv-down {
+    color: var(--ms-red, #d13438);
+}
+
+.dv-rank-movement.dv-same {
+    color: var(--text-secondary, #8a8886);
+}
+
+@keyframes dv-bounce {
+    0%   { transform: translateY(0); }
+    30%  { transform: translateY(-4px); }
+    50%  { transform: translateY(1px); }
+    70%  { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
+}
+
+.dv-rank-movement.dv-up,
+.dv-rank-movement.dv-down {
+    animation: dv-bounce 0.6s ease-out;
+}
+
+/* ---------- 3. Step Heatmap Calendar ---------- */
+.dv-heatmap-container {
+    background: var(--bg-card, white);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-top: 1rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color, #e1dfdd);
+    transition: background var(--transition-normal), border-color var(--transition-normal);
+}
+
+.dv-heatmap-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dv-heatmap-title i {
+    color: var(--ms-green);
+}
+
+.dv-heatmap-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.25rem;
+}
+
+.dv-heatmap-wrapper {
+    display: flex;
+    gap: 0;
+    min-width: max-content;
+}
+
+.dv-heatmap-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-right: 6px;
+    padding-top: 18px;
+}
+
+.dv-heatmap-label {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    line-height: 1;
+}
+
+.dv-heatmap-grid {
+    display: flex;
+    gap: 3px;
+    position: relative;
+}
+
+.dv-heatmap-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dv-heatmap-cell {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    position: relative;
+    cursor: default;
+    transition: transform 0.1s ease;
+}
+
+.dv-heatmap-cell:hover {
+    transform: scale(1.3);
+    z-index: 5;
+}
+
+/* Intensity levels */
+.dv-heat-0 { background: var(--ms-gray-200, #edebe9); }
+.dv-heat-1 { background: #9be9a8; }
+.dv-heat-2 { background: #40c463; }
+.dv-heat-3 { background: #30a14e; }
+.dv-heat-4 { background: #216e39; }
+.dv-heat-gold { background: #f5c542; }
+
+[data-theme="dark"] .dv-heat-0 { background: var(--ms-gray-100, #4b5563); }
+[data-theme="dark"] .dv-heat-1 { background: #0e4429; }
+[data-theme="dark"] .dv-heat-2 { background: #006d32; }
+[data-theme="dark"] .dv-heat-3 { background: #26a641; }
+[data-theme="dark"] .dv-heat-4 { background: #39d353; }
+[data-theme="dark"] .dv-heat-gold { background: #e3b341; }
+
+/* Month labels */
+.dv-heatmap-months {
+    display: flex;
+    gap: 3px;
+    padding-left: 0;
+    margin-bottom: 3px;
+}
+
+.dv-heatmap-month {
+    font-size: 9px;
+    color: var(--text-secondary);
+    line-height: 1;
+    text-align: left;
+}
+
+/* Tooltip */
+.dv-heatmap-tooltip {
+    position: fixed;
+    background: var(--ms-gray-900, #323130);
+    color: white;
+    padding: 0.35rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    line-height: 1.3;
+    pointer-events: none;
+    z-index: 1000;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.dv-heatmap-tooltip.dv-visible {
+    opacity: 1;
+}
+
+/* Legend */
+.dv-heatmap-legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+    margin-top: 0.5rem;
+    font-size: 9px;
+    color: var(--text-secondary);
+}
+
+.dv-heatmap-legend-cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+/* ---------- 4. Pace Indicator ---------- */
+.dv-pace-indicator {
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    border-radius: 0.75rem;
+    background: var(--bg-card, white);
+    border: 1px solid var(--border-color, #e1dfdd);
+    transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out), background-color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+    animation: dv-slide-up 0.4s ease-out;
+}
+
+@keyframes dv-slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.dv-pace-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+}
+
+.dv-pace-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.dv-pace-label.dv-ahead {
+    color: var(--ms-green, #107c10);
+}
+
+.dv-pace-label.dv-on-pace {
+    color: var(--ms-blue, #0078d4);
+}
+
+.dv-pace-label.dv-behind {
+    color: var(--ms-orange, #ff8c00);
+}
+
+.dv-pace-detail {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.dv-pace-bar-track {
+    height: 6px;
+    background: var(--ms-gray-200, #edebe9);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.dv-pace-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease-out, background 0.3s ease;
+    min-width: 2px;
+}
+
+.dv-pace-bar-fill.dv-ahead {
+    background: var(--ms-green, #107c10);
+}
+
+.dv-pace-bar-fill.dv-on-pace {
+    background: var(--ms-blue, #0078d4);
+}
+
+.dv-pace-bar-fill.dv-behind {
+    background: var(--ms-orange, #ff8c00);
+}
+
+/* Expected pace marker */
+.dv-pace-bar-marker {
+    position: absolute;
+    top: -2px;
+    width: 2px;
+    height: 10px;
+    background: var(--text-secondary);
+    border-radius: 1px;
+    opacity: 0.6;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+    .dv-heatmap-cell {
+        width: 11px;
+        height: 11px;
+    }
+
+    .dv-heatmap-label {
+        width: 11px;
+        height: 11px;
+        font-size: 8px;
+    }
+
+    .dv-heatmap-grid {
+        gap: 2px;
+    }
+
+    .dv-heatmap-col {
+        gap: 2px;
+    }
+
+    .dv-heatmap-months {
+        gap: 2px;
+    }
+}
