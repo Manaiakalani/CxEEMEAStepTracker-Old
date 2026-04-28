@@ -2907,7 +2907,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Register service worker for offline support
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
+            // Use a relative URL so the SW also registers correctly when this
+            // app is served from a sub-path (e.g. GitHub Pages project site).
+            navigator.serviceWorker.register('./sw.js')
                 .then((registration) => {
                     console.log('Service Worker registered successfully:', registration.scope);
                     

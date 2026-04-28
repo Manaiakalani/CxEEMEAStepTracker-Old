@@ -2,7 +2,7 @@
   "name": "CxE EMEA Offsite 2026 - Step Tracker",
   "short_name": "Step Tracker",
   "description": "Track your daily steps and compete with colleagues during CxE EMEA Offsite 2026",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#2E5A88",
   "theme_color": "#2E5A88",
@@ -29,7 +29,7 @@
   ],
   "categories": ["health", "fitness", "productivity"],
   "lang": "de-DE",
-  "scope": "/",
+  "scope": "./",
   "shortcuts": [
     {
       "name": "Add Steps",

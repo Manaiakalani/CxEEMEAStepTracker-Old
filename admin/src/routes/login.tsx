@@ -99,7 +99,7 @@ export default function Login() {
           </Button>
         </form>
         <div className="mt-6 text-center text-xs text-muted-foreground">
-          <a href="/" className="hover:text-foreground transition-colors">
+          <a href="../../" className="hover:text-foreground transition-colors">
             ← Back to Step Tracker
           </a>
         </div>

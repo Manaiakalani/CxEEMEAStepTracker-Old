@@ -10,6 +10,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [3.0.0-emea] - 2026 EMEA refresh
 
+### 🚀 Hosting & security
+- **Migrated from Azure Static Web Apps to GitHub Pages** (`.github/workflows/pages.yml`). Deploys on every push to `main`, builds the admin SPA in CI, publishes the whole repo root as the Pages artifact. Removed `azure-static-web-apps-yellow-bay-0aace901e.yml`.
+- **Resolved 2 Dependabot alerts**: bumped Vite `^5.4.9 → ^6.4.2` (CVE: optimized deps `.map` path traversal) which transitively brings esbuild to `0.25.12` (CVE: dev-server CORS).
+- Made all root-relative asset paths **sub-path safe** so the app works at `https://manaiakalani.github.io/CxEEMEAStepTracker/` as well as at a custom domain root: `manifest.json` (`start_url`, `scope`), service-worker registration + precache list, admin Vite `base`, admin "back to main app" links, admin favicon href.
+
 ### 🏅 Munich landmark badges & community touches
 - New **Munich-landmark milestone badges** in `gamification.js`: Frauenkirche Climber (10K), Marktstand Wanderer (8K Viktualienmarkt), Isar Explorer (15K), Garten Grand Looper (14K), Schwabing Trekker (12K, Microsoft DE HQ perimeter), Nymphenburg Royal (16K).
 - Added a **Munich Theme Days** section to the FAQ modal: Marienplatz Monday, Trachten Tuesday, Walking Shoes Wednesday, Trail Mix Thursday, Fancy Shoe Friday, Surfwelle Saturday.

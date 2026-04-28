@@ -1,25 +1,26 @@
 // Enhanced Service Worker for CxE EMEA Step Tracker
-const CACHE_VERSION = '2026-emea-001'; // Update this timestamp when deploying
+const CACHE_VERSION = '2026-emea-002'; // Update this timestamp when deploying
 const CACHE_NAME = `step-tracker-v${CACHE_VERSION}`;
 const STATIC_CACHE = `step-tracker-static-v${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `step-tracker-dynamic-v${CACHE_VERSION}`;
 
-// Critical resources to cache immediately
+// Critical resources to cache immediately (relative to SW scope so this works
+// at the domain root or under a project sub-path like /CxEEMEAStepTracker/).
 const CRITICAL_RESOURCES = [
-    '/',
-    '/index.html',
-    '/styles.css',
-    '/script.js',
-    '/gamification.js',
-    '/gamification.css',
-    '/web-share.js',
-    '/data-viz.js',
-    '/data-viz.css',
-    '/a11y.js',
-    '/a11y.css',
-    '/perf-security.js',
-    '/favicon.svg',
-    '/manifest.json'
+    './',
+    './index.html',
+    './styles.css',
+    './script.js',
+    './gamification.js',
+    './gamification.css',
+    './web-share.js',
+    './data-viz.js',
+    './data-viz.css',
+    './a11y.js',
+    './a11y.css',
+    './perf-security.js',
+    './favicon.svg',
+    './manifest.json'
 ];
 
 // External resources to cache with strategies
@@ -32,7 +33,7 @@ const EXTERNAL_RESOURCES = [
 const CACHE_STRATEGIES = {
     'cache-first': ['fonts.googleapis.com', 'cdnjs.cloudflare.com'],
     'network-first': ['api.open-meteo.com'],
-    'stale-while-revalidate': ['/', '/index.html', '/script.js', '/styles.css', '/manifest.json']
+    'stale-while-revalidate': ['./', './index.html', './script.js', './styles.css', './manifest.json']
 };
 
 // Cache TTL in milliseconds (1 hour for critical resources)
