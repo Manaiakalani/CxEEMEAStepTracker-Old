@@ -10,6 +10,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [3.0.0-emea] - 2026 EMEA refresh
 
+### 🏅 Munich landmark badges & community touches
+- New **Munich-landmark milestone badges** in `gamification.js`: Frauenkirche Climber (10K), Marktstand Wanderer (8K Viktualienmarkt), Isar Explorer (15K), Garten Grand Looper (14K), Schwabing Trekker (12K, Microsoft DE HQ perimeter), Nymphenburg Royal (16K).
+- Added a **Munich Theme Days** section to the FAQ modal: Marienplatz Monday, Trachten Tuesday, Walking Shoes Wednesday, Trail Mix Thursday, Fancy Shoe Friday, Surfwelle Saturday.
+- Added a **Suggested Munich Routes** card in the FAQ with 7 real walking routes mapped to step counts (Marienplatz → Englischer Garten, Kleinhesseloher See loop, Eisbach Surfwelle, Olympiapark, Isar return, Nymphenburg).
+
+### 🧪 React admin audit (Vercel React Best Practices)
+- Verified `admin/` already follows the practices that matter: React Query for server state, no `useEffect`-for-derived-state, `useMemo` only where measurably useful, no premature `'use client'` (Vite SPA, none needed), stable list keys, route-level code splitting via `react-router`. No structural refactor required.
+- `admin/dist/` is committed (matches the parent static site's deployment model) and rebuilds cleanly on Vite 5.
+
 ### 🇩🇪 Munich & EMEA content
 - Defaulted weather widget to **Munich, DE** (48.1351, 11.5820, `Europe/Berlin` timezone) via Open-Meteo.
 - Replaced Pacific-Northwest challenges with **Munich-themed** equivalents: Frauenkirche Tower Climb, Viktualienmarkt Power Walk, Microsoft Schwabing Trek, Isar River Shoreline, Englischer Garten Grand Loop. Kept Microsoft heritage challenges (Clippy, Windows 95, Master Chief).

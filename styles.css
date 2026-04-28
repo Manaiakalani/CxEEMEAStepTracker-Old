@@ -4251,3 +4251,17 @@ button:active:not(:disabled),
     .footer::before { display: none; }
     .welcome-screen, .welcome-content { background-image: none; }
 }
+
+/* Munich theme days list — slightly tighter line-height + accent bullets */
+.theme-days { list-style: none; padding: 0; margin: 0.5rem 0; }
+.theme-days li {
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.375rem;
+    border-radius: 0.5rem;
+    background: rgba(var(--brand-alpine-rgb), 0.05);
+    border-left: 3px solid var(--brand-edelweiss);
+    line-height: 1.5;
+}
+[data-theme="dark"] .theme-days li {
+    background: rgba(var(--brand-alpine-rgb), 0.10);
+}
