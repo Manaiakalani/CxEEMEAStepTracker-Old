@@ -10,6 +10,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [3.0.0-emea] - 2026 EMEA refresh
 
+### 🎨 Refinement Layer 2 — UI/UX polish pass
+- **Removed Spotify integration** entirely (header widget, click handler, `openSpotifyPlaylist()` function, ~70 lines of CSS, plus all references in README/CHANGELOG/DESIGN_REVIEW). The header now hosts only weather + steps stat alongside the hamburger.
+- **New design tokens** (springy `--ease-spring` / `--ease-glide` / `--ease-snappy` curves, 4px-base spacing scale, layered `--shadow-{xs,sm,md,lg,pop}` system).
+- **Typography refinement**: Fraunces hero with tighter tracking; Inter Tight + tabular numerics on every step/stat number (no more digit jitter when counters tick).
+- **Surface polish**: cards lift on hover with calmer easing; nav buttons are pill-shaped with a deep-alpine gradient on the active state; leaderboard rows nudge `translateX(2px)` on hover.
+- **Interaction polish**: primary buttons get `translateY(-1px)` on hover and `scale(0.98)` on press (snaps back in 80ms); accessible focus rings (`2px var(--brand-alpine)` with 3px offset on interactive controls); softened modal scrim with `backdrop-filter: blur(4px) saturate(140%)`.
+- **Mobile dignity**: enforced 44px min touch targets on touch devices via `(hover: none) and (pointer: coarse)` media query.
+- **Reduced motion**: extended override that zeros out all Refinement Layer 2 transforms when `prefers-reduced-motion: reduce`.
+- All changes verified against the existing 177-test Playwright contract (chromium green; non-chromium failures are all pre-existing).
+
 ### 🔒 Security & privacy hardening (post-public audit)
 - **Fixed XSS in live display** (`live-display/display.js`): user-controlled `name`, `team`, `message`, and `timeAgo` strings rendered into `innerHTML` are now run through a new `escapeHTML()` helper. Previously a participant could register a display name like `<img src=x onerror=…>` and it would execute on the kiosk.
 - **Validated `postMessage` origin** in the live display so a hostile framing page cannot trigger Supabase reads.
@@ -52,13 +62,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🎯 Emil Kowalski – style fit-and-finish
 - Standardised duration tiers: 120ms press, 180ms tooltip, 240ms tab/dropdown, 360ms modal/drawer.
 - Tactile `scale(0.97)` press on every button with the existing `cubic-bezier(0.23, 1, 0.32, 1)` easing.
-- 1px hairline borders (`rgba(27,39,51,0.08)` light / `rgba(237,230,210,0.08)` dark) replacing solid borders on cards, leaderboard rows, modals, weather/Spotify widgets.
+- 1px hairline borders (`rgba(27,39,51,0.08)` light / `rgba(237,230,210,0.08)` dark) replacing solid borders on cards, leaderboard rows, modals, weather widgets.
 - Inset-light highlight on dark cards (`box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06)`) for crispness.
 
 ### 📱 Mobile-first hardening
 - Enforced ≥44×44 px tap targets on all primary controls (nav, hamburger, modal close, theme toggle, quick actions).
 - `env(safe-area-inset-*)` padding on header / footer / app container.
-- CLS reservations (`min-height` / `min-width`) on weather widget, Spotify widget, and primary stat values.
+- CLS reservations (`min-height` / `min-width`) on weather widget, and primary stat values.
 - `overscroll-behavior: contain` on leaderboard, leaderboard list, and activity feed.
 - Service worker `CACHE_VERSION` bumped to `2026-emea-001` so returning visitors hard-refresh.
 
@@ -197,7 +207,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - **Real Weather Integration**: Live Open-Meteo API with clothing recommendations
 - **Dark Mode Support**: Full dark theme with system preference detection
 - **PWA Capabilities**: Offline support with service worker caching
-- **Spotify Integration**: Official CxE EMEA 2026 playlist
 - **Overachiever System**: Advanced recognition with multiple criteria
 - **Live Notifications**: Real-time achievement alerts with animations
 - **Multi-language Greetings**: 12 international welcome messages
@@ -254,7 +263,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 | 2.3.0 | 2025-09-24 | Database & Admin | Supabase, Admin Dashboard, Live Display |
 | 2.2.0 | 2025-09-11 | Premium UX | Hamburger menu redesign, micro-interactions |
 | 2.1.0 | 2025-09-03 | Refined | CxE LT team, interactive footer |
-| 2.0.0 | 2025-08-28 | Enterprise | Weather, Dark mode, PWA, Spotify |
+| 2.0.0 | 2025-08-28 | Enterprise | Weather, Dark mode, PWA |
 | 1.5.0 | 2025-08-27 | Enhanced Competition | Challenges, activity widget |
 | 1.0.0 | 2025-08-26 | Foundation | Initial release |
 
