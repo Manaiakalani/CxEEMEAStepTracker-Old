@@ -13,11 +13,14 @@
         // seeded by admin-login.html; all of that has been removed.
         try { window.location.replace('./admin/dist/#/'); } catch (_) {}
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #0078d4, #5c2d91);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2E5A88 0%, #1f3f60 60%, #2F5D3A 100%);
             min-height: 100vh;
             margin: 0;
             display: flex;
@@ -26,18 +29,20 @@
             padding: 20px;
             color: #fff;
             text-align: center;
+            -webkit-font-smoothing: antialiased;
         }
         .card {
             background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
             padding: 40px;
             border-radius: 16px;
             border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
             max-width: 420px;
             width: 100%;
         }
-        h1 { margin: 0 0 8px; font-size: 24px; }
+        h1 { margin: 0 0 8px; font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
         p { margin: 0; opacity: 0.9; }
         a {
             color: #fff;

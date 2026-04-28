@@ -10,6 +10,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [3.0.0-emea] - 2026 EMEA refresh
 
+### 🎨 Cross-page design unification
+- **Unified design language across all 5 pages** (main app, live display, admin login stub, admin dashboard stub, admin SPA). Every surface now shares the EMEA Alpine / Forest / Edelweiss palette and the Fraunces (display) + Inter (body) + Inter Tight (numerics) type system.
+- **`live-display/`**: ditched the legacy Microsoft `--ms-blue` / `--ms-purple` palette in favour of `--brand-alpine` / `--brand-forest` / `--brand-edelweiss` (legacy `--ms-*` tokens kept as aliases for backwards compatibility). Hero title now renders in Fraunces with a light-alpine → edelweiss gradient that reads cleanly on the dark display. All `rgba(0,120,212,…)` shadows rewritten to `rgba(46,90,136,…)`.
+- **`admin-login.html` / `admin-dashboard.html` redirect stubs**: replaced the Microsoft blue→purple gradient with an Alpine→Forest gradient and switched from generic system fonts to Inter (Fraunces for the heading).
+- **Admin SPA (`admin/`)**: shifted shadcn `--primary` and `--ring` from MS-blue HSL `210 100% 42%` to Alpine HSL `210 49% 36%` (and dark-mode `210 53% 65%`). Loaded Fraunces / Inter / Inter Tight via tightened CSP and applied them in `index.css` (Fraunces for h1–h3, Inter Tight + tabular numerics for stat values).
+- **Welcome card**: restored opaque `--bg-card` background that the Refinement Layer 2 selector was inadvertently stripping, so the Bavarian diamond pattern no longer bleeds through the hero card.
+
 ### 🎨 Refinement Layer 2 — UI/UX polish pass
 - **Removed Spotify integration** entirely (header widget, click handler, `openSpotifyPlaylist()` function, ~70 lines of CSS, plus all references in README/CHANGELOG/DESIGN_REVIEW). The header now hosts only weather + steps stat alongside the hamburger.
 - **New design tokens** (springy `--ease-spring` / `--ease-glide` / `--ease-snappy` curves, 4px-base spacing scale, layered `--shadow-{xs,sm,md,lg,pop}` system).
