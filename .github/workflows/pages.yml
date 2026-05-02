@@ -1,9 +1,10 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
+  # Workflow disabled: this repository (-Old suffix) has been superseded by
+  # Manaiakalani/CxEEMEAStepTracker. Kept available for manual trigger only.
   workflow_dispatch:
+
 
 permissions:
   contents: read
