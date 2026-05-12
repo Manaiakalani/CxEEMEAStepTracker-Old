@@ -16,11 +16,18 @@ export default defineConfig({
     chunkSizeWarningLimit: 1200,
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ["react", "react-dom", "react-router-dom"],
-          charts: ["recharts"],
-          supabase: ["@supabase/supabase-js"],
-          forms: ["react-hook-form", "@hookform/resolvers", "zod"],
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (/[\\/]node_modules[\\/](recharts)[\\/]/.test(id)) return "charts";
+          if (/[\\/]node_modules[\\/]@supabase[\\/]supabase-js[\\/]/.test(id)) return "supabase";
+          if (
+            /[\\/]node_modules[\\/](react-hook-form|@hookform[\\/]resolvers|zod)[\\/]/.test(id)
+          ) {
+            return "forms";
+          }
+          if (/[\\/]node_modules[\\/](react|react-dom|react-router-dom|scheduler)[\\/]/.test(id)) {
+            return "react";
+          }
         },
       },
     },
