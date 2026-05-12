@@ -7,29 +7,38 @@
 }
 
 :root {
-    /* Microsoft Color Palette */
-    --ms-blue: #0078d4;
-    --ms-blue-dark: #106ebe;
-    --ms-blue-light: #40e0d0;
-    --ms-green: #107c10;
-    --ms-orange: #ff8c00;
-    --ms-red: #d13438;
-    --ms-purple: #5c2d91;
-    --ms-teal: #008272;
+    /* CxE EMEA brand palette (Alpine / Forest / Edelweiss).
+       Legacy --ms-* names retained as aliases so existing rules in this
+       stylesheet keep working; new tokens (--brand-*) match the main app. */
+    --brand-alpine:    #2E5A88;  /* deep alpine lake blue — primary */
+    --brand-alpine-2:  #4978A8;  /* lighter alpine for gradients */
+    --brand-forest:    #2F5D3A;  /* Bavarian forest green */
+    --brand-edelweiss: #E8B23A;  /* warm gold — podium / accents */
+    --brand-crimson:   #B43A3A;  /* alert / error */
+    --brand-teal:      #2E8B7A;
+
+    --ms-blue:       var(--brand-alpine);
+    --ms-blue-dark:  #1f3f60;
+    --ms-blue-light: var(--brand-alpine-2);
+    --ms-green:      var(--brand-forest);
+    --ms-orange:     var(--brand-edelweiss);
+    --ms-red:        var(--brand-crimson);
+    --ms-purple:     #4a3a78; /* muted complementary, replaces neon purple */
+    --ms-teal:       var(--brand-teal);
     
     /* Display-specific colors */
     --bg-primary: #0f1419;
     --bg-secondary: #1a1f2e;
     --bg-card: #242938;
-    --bg-hover: rgba(0, 120, 212, 0.1);
+    --bg-hover: rgba(46, 90, 136, 0.12);
     --text-primary: #ffffff;
     --text-secondary: #b3b8cd;
     --text-tertiary: #8a8fa3;
     --border-color: #3a3f54;
-    --accent-gradient: linear-gradient(135deg, var(--ms-blue), var(--ms-purple));
-    --success-color: #00d26a;
-    --warning-color: #ffb100;
-    --error-color: #ff4757;
+    --accent-gradient: linear-gradient(135deg, var(--brand-alpine), var(--brand-forest));
+    --success-color: #4FB37B;
+    --warning-color: var(--brand-edelweiss);
+    --error-color: var(--brand-crimson);
     --neutral-pill: #4a5065;
 
     /* Emil Kowalski easing + duration tokens */
@@ -69,7 +78,7 @@ body {
     border-bottom: 3px solid transparent;
     border-image: linear-gradient(90deg, var(--ms-blue), var(--ms-purple), var(--ms-blue)) 1;
     padding: 2rem 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 120, 212, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(46, 90, 136, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -81,7 +90,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(ellipse at top, rgba(0, 120, 212, 0.1) 0%, transparent 70%);
+    background: radial-gradient(ellipse at top, rgba(46, 90, 136, 0.1) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -115,7 +124,7 @@ body {
 .title-group h1 {
     font-size: 2.5rem;
     font-weight: 800;
-    background: var(--accent-gradient);
+    background: linear-gradient(135deg, #6FA3D2 0%, var(--brand-edelweiss) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -211,7 +220,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: rgba(0, 120, 212, 0.1);
+    background: rgba(46, 90, 136, 0.1);
     border: 2px solid var(--ms-blue);
     border-radius: 50px;
     font-weight: 600;
@@ -295,7 +304,7 @@ body {
 
 .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 120, 212, 0.2);
+    box-shadow: 0 8px 30px rgba(46, 90, 136, 0.2);
 }
 
 .stat-icon {
@@ -329,7 +338,7 @@ body {
 .challenges-card {
     background: linear-gradient(135deg, var(--ms-purple), var(--ms-blue));
     border: 2px solid var(--ms-blue);
-    box-shadow: 0 4px 20px rgba(0, 120, 212, 0.2);
+    box-shadow: 0 4px 20px rgba(46, 90, 136, 0.2);
 }
 
 .challenges-card .stat-icon {
@@ -359,8 +368,8 @@ body {
     gap: 1.5rem;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 120, 212, 0.3),
-                0 4px 16px rgba(92, 45, 145, 0.2);
+    box-shadow: 0 8px 32px rgba(46, 90, 136, 0.3),
+                0 4px 16px rgba(47, 93, 58, 0.2);
     transform: translateZ(0);
     will-change: transform;
     transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out), background-color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
@@ -369,8 +378,8 @@ body {
 
 .stomp-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 120, 212, 0.4),
-                0 6px 20px rgba(92, 45, 145, 0.3);
+    box-shadow: 0 12px 40px rgba(46, 90, 136, 0.4),
+                0 6px 20px rgba(47, 93, 58, 0.3);
 }
 
 .stomp-icon {
@@ -482,7 +491,7 @@ body {
     padding: 1rem;
     border-radius: 12px;
     margin-bottom: 0.5rem;
-    background: rgba(0, 120, 212, 0.05);
+    background: rgba(46, 90, 136, 0.05);
     border-left: 3px solid var(--ms-blue);
     animation: slideInFromRight 0.5s ease-out;
 }
@@ -969,7 +978,7 @@ body {
 
 .retry-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 120, 212, 0.3);
+    box-shadow: 0 8px 25px rgba(46, 90, 136, 0.3);
 }
 
 /* Responsive Design */
@@ -1223,7 +1232,7 @@ body {
 /* Animation for stat card updates */
 .stat-card.updating {
     transform: scale(1.02);
-    box-shadow: 0 0 20px rgba(0, 120, 212, 0.3);
+    box-shadow: 0 0 20px rgba(46, 90, 136, 0.3);
 }
 
 /* Connection status indicators */
@@ -1410,4 +1419,42 @@ button:active {
 }
 html[data-debug="1"] [data-debug-only] {
     display: revert !important;
+}
+
+/* ============================================================
+   Brand alignment layer — match main app (Refinement Layer 2)
+   ============================================================ */
+:root {
+    --ease-glide: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Hero / display title — Fraunces serif to match main app */
+.title-group h1,
+.feed-header h2,
+.leaderboard-header h2 {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* Tabular numerics on every step / score / counter — match main */
+.steps-count,
+.step-count,
+.total-steps,
+.live-stat-value,
+.metric-value,
+.leaderboard-steps,
+.entry-steps,
+[id*="totalSteps"],
+[id*="StepCount"] {
+    font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+}
+
+/* Accent border-image: alpine → edelweiss → forest (was MS blue→purple→blue) */
+.display-header {
+    border-image: linear-gradient(90deg, var(--brand-alpine), var(--brand-edelweiss), var(--brand-forest)) 1;
 }

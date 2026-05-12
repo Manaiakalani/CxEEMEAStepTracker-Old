@@ -59,7 +59,7 @@ Plus suggested point-to-point routes wired into the in-app tips:
 - Real weather integration (Open-Meteo API, no API key)
 - Dark mode with system preference detection
 - PWA install + offline support via Service Worker
-- Spotify playlist widget · Keyboard shortcuts · Live activity feed
+- Keyboard shortcuts · Live activity feed · PWA offline mode
 - WCAG 2.1 AA: ARIA, focus trap, keyboard nav, screen-reader friendly
 - Supabase-backed cloud sync with admin dashboard (React/shadcn SPA under `admin/`)
 - Live presentation mode at `live-display/` for big-screen leaderboards
@@ -130,7 +130,6 @@ build commands.
 ### **4. Enhanced Interface Elements**
 - **Premium Hamburger Menu**: Redesigned with gradient effects, staggered animations, and premium micro-interactions
 - **Weather Widget**: Live weather for Munich, DE with clothing advice via Open-Meteo API
-- **Spotify Widget**: Quick access to official CxE EMEA 2026 playlist
 - **Advanced Accessibility**: ARIA support, keyboard navigation, and mobile-optimized touch targets
 - **Live Notifications**: Achievement alerts with custom animations
 - **Interactive Footer**: Rainbow heart glow effect on hover
@@ -231,7 +230,7 @@ Enhanced Stack:
 | **2.3.0** | 2025-09-24 | Supabase database, Admin Dashboard, Live Display |
 | **2.2.0** | 2025-09-11 | Premium hamburger menu, micro-interactions |
 | **2.1.0** | 2025-09-03 | CxE LT team, interactive footer |
-| **2.0.0** | 2025-08-28 | Weather API, Dark mode, PWA, Spotify |
+| **2.0.0** | 2025-08-28 | Weather API, Dark mode, PWA |
 | **1.5.0** | 2025-08-27 | Challenges, activity widget |
 | **1.0.0** | 2025-08-26 | Initial release |
 
@@ -337,7 +336,6 @@ Enhanced Stack:
 - ✅ **Real Weather Integration** - Live Open-Meteo API with clothing recommendations
 - ✅ **Dark Mode Support** - Full dark theme with system detection
 - ✅ **PWA Capabilities** - Offline support with service worker
-- ✅ **Spotify Integration** - Official CxE EMEA 2026 playlist
 - ✅ **Overachiever System** - Advanced recognition with multiple criteria
 - ✅ **Live Notifications** - Real-time achievement alerts
 - ✅ **Multi-language Greetings** - 12 international welcome messages
@@ -439,11 +437,6 @@ const longitude = 11.5820;
 // Uses Open-Meteo API: https://api.open-meteo.com/v1/forecast
 ```
 
-### Spotify Integration
-```javascript
-// Official CxE EMEA 2026 playlist
-const playlistUrl = 'https://open.spotify.com/playlist/5ajf3ykIGO6jPqHNx6moOC';
-```
 
 ## 📈 Enterprise Scalability
 

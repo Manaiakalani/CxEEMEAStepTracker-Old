@@ -3,6 +3,17 @@
  * Handles real-time data synchronization with main step tracker app
  */
 
+// --- HTML escaping (XSS defense) ---
+// All user-controlled strings (display names, team names, activity messages)
+// are interpolated into innerHTML below. Escape them via textContent → innerHTML
+// so payloads like "<img src=x onerror=...>" render as text instead of executing.
+function escapeHTML(value) {
+    if (value === null || value === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = String(value);
+    return div.innerHTML;
+}
+
 // --- Debug gate (Item 14) ---
 // Verbose console output and the debug test button are only active when the
 // page is loaded with ?debug=1. This keeps the kiosk clean in production.
@@ -167,8 +178,12 @@ class LiveDisplay {
             });
         }
 
-        // Listen for data updates from main app
+        // Listen for data updates from main app. Validate origin so a hostile
+        // page that frames us cannot trigger arbitrary Supabase reads.
         window.addEventListener('message', (event) => {
+            if (event.origin !== window.location.origin) {
+                return;
+            }
             if (event.data && event.data.type === 'DATA_UPDATED') {
                 console.log('📨 Received data update notification from main app');
                 console.log(`📊 Update contains: ${event.data.users?.length || 0} users, ${event.data.activities?.length || 0} activities`);
@@ -1402,8 +1417,8 @@ class LiveDisplay {
             <div class="weekly-champion-display">
                 <div class="champion-avatar">👑</div>
                 <div class="champion-info">
-                    <div class="champion-name">${champion.name}</div>
-                    <div class="champion-team">${champion.team}</div>
+                    <div class="champion-name">${escapeHTML(champion.name)}</div>
+                    <div class="champion-team">${escapeHTML(champion.team)}</div>
                     <div class="champion-steps">${totalSteps.toLocaleString()}</div>
                     <div class="champion-label">TOTAL STEPS THIS WEEK</div>
                     ${achievementText ? `<div class="champion-achievement ${achievementClass}">${achievementText}</div>` : ''}
@@ -1464,8 +1479,8 @@ class LiveDisplay {
                         ${person.rank}
                     </div>
                     <div class="leaderboard-info">
-                        <div class="leaderboard-name">${person.name}</div>
-                        <div class="leaderboard-team">${person.team}</div>
+                        <div class="leaderboard-name">${escapeHTML(person.name)}</div>
+                        <div class="leaderboard-team">${escapeHTML(person.team)}</div>
                     </div>
                     <div class="leaderboard-steps">${person.steps.toLocaleString()}</div>
                 `;
@@ -1518,7 +1533,7 @@ class LiveDisplay {
                         ${team.rank}
                     </div>
                     <div class="leaderboard-info">
-                        <div class="leaderboard-name">${team.name}</div>
+                        <div class="leaderboard-name">${escapeHTML(team.name)}</div>
                         <div class="leaderboard-team">${team.memberCount} members</div>
                     </div>
                     <div class="leaderboard-steps">${team.steps.toLocaleString()}</div>
@@ -1613,8 +1628,8 @@ class LiveDisplay {
                         ${this.getActivityIcon(activity.type)}
                     </div>
                     <div class="activity-content">
-                        <div class="activity-message">${activity.message}</div>
-                        <div class="activity-time">${activity.timeAgo}</div>
+                        <div class="activity-message">${escapeHTML(activity.message)}</div>
+                        <div class="activity-time">${escapeHTML(activity.timeAgo)}</div>
                     </div>
                 `;
                 

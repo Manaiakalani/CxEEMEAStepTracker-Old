@@ -63,7 +63,7 @@ design-review-screenshots/
 # Admin SPA (Vite)
 admin/.vite/
 admin/node_modules/
-# Keep admin/dist/ committed so the parent static site can serve it
+# admin/dist/ IS committed so the parent static site can serve it (rebuild via 'cd admin && npm install && npm run build')
 
-# Admin SPA dist (built from admin/src; rebuild via 'cd admin && npm install && npm run build')
-admin/dist/
+# TypeScript incremental build info
+admin/tsconfig.*.tsbuildinfo

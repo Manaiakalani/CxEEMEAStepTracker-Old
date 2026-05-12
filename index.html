@@ -7,6 +7,12 @@
     <meta name="keywords" content="step tracker, fitness, competition, Microsoft, CxE EMEA">
     <meta name="author" content="CxE EMEA Team">
     <meta name="theme-color" content="#2E5A88">
+
+    <!-- Content Security Policy: defense-in-depth against XSS / data exfiltration.
+         'unsafe-inline' is currently required by inline event handlers and styles
+         throughout this vanilla-JS app; remaining `script-src` is locked to self
+         + the Supabase CDN. `connect-src` only allows Supabase + Open-Meteo. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co https://api.open-meteo.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
     
     <title>CxE EMEA Offsite - Step Tracker</title>
     
@@ -49,15 +55,6 @@
                         <h1>CxE EMEA Offsite 2026</h1>
                     </div>
                     <div class="header-stats">
-                        <div class="spotify-widget" id="spotifyWidget">
-                            <div class="spotify-icon">
-                                <i class="fab fa-spotify"></i>
-                            </div>
-                            <div class="spotify-info">
-                                <div class="spotify-label">Offsite Playlist</div>
-                                <div class="spotify-link" id="spotifyLink">CxE EMEA 2026</div>
-                            </div>
-                        </div>
                         <div class="weather-info" id="weatherInfo">
                             <div class="weather-location">Munich, DE</div>
                             <div class="weather-temp" id="weatherTemp">--°C / --°F</div>
@@ -455,9 +452,36 @@
                     <h3><i class="fas fa-shield-alt" style="color: var(--ms-blue); margin-right: 0.5rem;"></i>Privacy & Data Usage Notice</h3>
                     <div style="background: rgba(var(--ms-blue-rgb), 0.1); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid var(--ms-blue);">
                         <p><strong>Your Privacy Matters:</strong> Any information you provide (name/username and step data) is used exclusively for the purpose of team morale and engagement during the CxE EMEA Offsite 2026 event.</p>
-                        <p><strong>Data Usage:</strong> Your name/username and steps are only identified and used for the step tracking game throughout the week. This data is stored securely and will be permanently deleted less than 14 days after the offsite is completed.</p>
+                        <p><strong>Data Usage:</strong> Your name/username and steps are only identified and used for the step tracking game throughout the week. Cloud-stored data is purged by the event organisers within 14 days of the offsite ending; you can also clear your own data at any time from the Profile screen, which removes it from this device immediately and from the cloud on next sync.</p>
                         <p><strong>Minimal Data:</strong> We only collect what's necessary - your chosen display name and step counts. No personal information, location data, or device information is stored.</p>
                     </div>
+                </div>
+
+                <div class="faq-section">
+                    <h3><i class="fas fa-mountain-sun" style="color: var(--brand-alpine); margin-right: 0.5rem;"></i>Munich Theme Days</h3>
+                    <p>Light-hearted dress-up days during the offsite week — opt in, no pressure:</p>
+                    <ul class="theme-days">
+                        <li><strong>Monday — Marienplatz Monday:</strong> Anything blue & white (Bavarian flag colours).</li>
+                        <li><strong>Tuesday — Trachten Tuesday:</strong> A tasteful nod to traditional Bavarian dress (Lederhosen / Dirndl optional, definitely not required).</li>
+                        <li><strong>Wednesday — Walking Shoes Wednesday:</strong> Best step-friendly footwear wins a prize.</li>
+                        <li><strong>Thursday — Trail Mix Thursday:</strong> Snack swap on the office floor — bring something from your home country.</li>
+                        <li><strong>Friday — Fancy Shoe Friday:</strong> Send the offsite off with style.</li>
+                        <li><strong>Saturday — Surfwelle Saturday:</strong> Optional group walk to the Eisbach surf wave.</li>
+                    </ul>
+                </div>
+
+                <div class="faq-section">
+                    <h3><i class="fas fa-route" style="color: var(--brand-forest); margin-right: 0.5rem;"></i>Suggested Munich Routes</h3>
+                    <p>Walking targets you can chase between sessions, mapped to real Munich landmarks:</p>
+                    <ul>
+                        <li><strong>Marienplatz → Englischer Garten</strong> · 2.0 km · ~2,800 steps</li>
+                        <li><strong>Kleinhesseloher See loop</strong> · 1.5 km · ~2,000 steps</li>
+                        <li><strong>Marienplatz → Eisbach Surfwelle → Hofgarten</strong> · 2.5 km · ~3,500 steps</li>
+                        <li><strong>Englischer Garten → Olympiapark</strong> · 4.5 km · ~6,300 steps</li>
+                        <li><strong>Marienplatz → Olympiapark / BMW Welt</strong> · 5.5 km · ~7,800 steps</li>
+                        <li><strong>Haus der Kunst → Lake → Isar return</strong> · 8.5 km · ~11,000 steps</li>
+                        <li><strong>Marienplatz → Schloss Nymphenburg & back</strong> · ~12 km · ~16,000 steps</li>
+                    </ul>
                 </div>
 
                 <div class="faq-section">
@@ -509,7 +533,7 @@
                     </div>
                     <div class="faq-item">
                         <strong>Q: What happens to my data after the offsite?</strong>
-                        <p>A: All data will be permanently deleted less than 14 days after the offsite ends. You can also manually clear your data anytime from the Profile section.</p>
+                        <p>A: Cloud-stored data is purged by the event organisers within 14 days of the offsite ending. You can also clear your own data at any time from the Profile section — this removes it from this device immediately and from the cloud on next sync.</p>
                     </div>
                     <div class="faq-item">
                         <strong>Q: I lost my data, can it be recovered?</strong>
@@ -540,7 +564,7 @@
                 <div class="faq-section disclaimer">
                     <h3>Important Information</h3>
                     <p><strong>Event Purpose:</strong> This app is designed exclusively for the CxE EMEA Offsite 2026 event to boost team morale and encourage physical activity during the week.</p>
-                    <p><strong>Data Lifecycle:</strong> All participant data will be permanently and securely deleted less than 14 days after the offsite concludes. No data will be retained beyond this period.</p>
+                    <p><strong>Data Lifecycle:</strong> Cloud-stored participant data is purged by the event organisers within 14 days of the offsite concluding. The "Clear my data" control in Profile lets any participant remove their own record on demand.</p>
                     <p><strong>Voluntary Participation:</strong> Participation in the step tracking challenge is entirely voluntary and for entertainment purposes only.</p>
                     <p><strong>No Warranty:</strong> This application is provided "as-is" for team building and motivational purposes without any warranties.</p>
                     <p><strong>Health Disclaimer:</strong> This is a fun team activity, not medical advice. Please consult healthcare providers for fitness guidance. Step tracking is for motivation and team engagement only.</p>

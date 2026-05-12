@@ -59,7 +59,7 @@ export function AppSidebar() {
       <Separator />
       <div className="p-3">
         <a
-          href="/"
+          href="../../"
           className="flex items-center gap-2 rounded-md px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <ExternalLink className="h-3.5 w-3.5" />

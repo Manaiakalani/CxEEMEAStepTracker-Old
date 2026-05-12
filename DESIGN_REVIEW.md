@@ -15,7 +15,7 @@
 - **Emoji-prefixed H2/H3** ("🚀 New User Registration", "👋 Welcome back!", "🏆 Leaderboard") break typographic rhythm and reduce authority. Icons should be actual `<svg>` sized to the cap-height, not emoji.
 - **Motion is hand-wavy.** `--transition-fast: 0.15s ease` / `--transition-normal: 0.3s ease` (`styles.css:65-67`) don't define a real curve. `ease` in CSS is `ease-in-out`-ish, which makes every hover feel sluggish. Swap to custom out-curves.
 - **No press feedback.** Not a single primary button on this page has `:active { transform: scale(0.97) }`. Tapping a `.nav-btn` or `.btn` on mobile feels unresponsive.
-- **Mobile header crams 4 groups into 390px** (hamburger + weather pill + Spotify widget + stats) → wraps awkwardly in `index_mobile_light_above-fold.png`. One pill needs to move behind the hamburger.
+- **Mobile header crams 4 groups into 390px** (hamburger + weather pill + stats) → wraps awkwardly in `index_mobile_light_above-fold.png`. One pill needs to move behind the hamburger.
 
 ### `admin-login.html`
 - **Zero brand presence.** A centered white card on the purple gradient with a "Secure login for CxE EMEA Step Tracker" subtitle is the literal stock template.
@@ -86,7 +86,7 @@ Every "Before" row is copy-paste accurate from the file at that line. Every "Aft
 | 9 | `.nav-btn` (`index.html:77-94` + styles.css) | No `:active` state defined | `.nav-btn:active { transform: scale(0.97); transition-duration: 80ms; }` | Tap feedback is table-stakes on mobile. |
 | 10 | `styles.css:152` (`.header`) | `position: sticky; backdrop-filter: blur(10px); transition: background 0.3s ease, border-color 0.3s ease;` | Keep sticky; gate the backdrop blur behind `@supports (backdrop-filter: blur(10px)) and (min-width: 768px)` and only apply when `scroll-y > 8px` (toggle a class from JS) | Sticky + always-on backdrop blur janks on mid-tier Android; activate only after scroll. |
 | 11 | Headings globally | No `text-wrap: balance` anywhere in the repo | `h1, h2, h3, .welcome-content p { text-wrap: balance; }` (2-line max on p) | Zero cost, immediate typographic polish. |
-| 12 | Mobile header | 4 groups (hamburger + weather + Spotify + stats) overflow at 390px | Collapse weather + Spotify into the hamburger flyout under a "Widgets" subheader on `< 640px`. | See `index_mobile_light_above-fold.png`. |
+| 12 | Mobile header | 4 groups (hamburger + weather + stats) overflow at 390px | Collapse weather into the hamburger flyout under a "Widgets" subheader on `< 640px`. | See `index_mobile_light_above-fold.png`. |
 
 ### 3b. `admin-login.html`
 
@@ -211,7 +211,7 @@ Every hit from `grep -n "transition\|animation\|@keyframes" styles.css gamificat
 10. **Kill the 600ms UI transitions** at `styles.css:1420, 1534` and any other `0.5s+ ease` on interactive elements.
 11. **Add `text-wrap: balance`** globally to `h1, h2, h3` + the welcome paragraph. Zero-cost typographic win.
 12. **Admin dashboard sticky sub-nav with scroll-spy** — the page promises tabs; give it a structural anchor.
-13. **Mobile header collapse** — move weather + Spotify widgets into the hamburger flyout under `< 640px`.
+13. **Mobile header collapse** — move weather widget into the hamburger flyout under `< 640px`.
 14. **Live-display empty state fix** — neutral (not red) "Listening…" pill, hide the `--:--` clock until first tick, hide debug text behind `?debug=1`.
 15. **Delete hardcoded admin creds** at `admin-login.html:359-362`. (Security, but called out because it will be spotted in review.)
 
@@ -223,7 +223,7 @@ Observed in `*_mobile_*.png` captures at 390×844:
 
 | Surface | Issue | Screenshot | Fix |
 |---|---|---|---|
-| `index.html` header | Hamburger + weather pill + Spotify widget + stats wrap to two rows on 390px, creating a jagged top edge. | `index_mobile_light_above-fold.png` | Below 640px, keep hamburger + one priority widget; move the rest into the flyout. |
+| `index.html` header | Hamburger + weather pill + stats wrap to two rows on 390px, creating a jagged top edge. | `index_mobile_light_above-fold.png` | Below 640px, keep hamburger + one priority widget; move the rest into the flyout. |
 | `index.html` welcome | H3 with long string + emoji overruns on one line on 390px and wraps orphan words. | same | `text-wrap: balance;` + remove emoji. |
 | `admin-dashboard.html` user table | Horizontal overflow on mobile (`admin-dashboard.html:420-439` has no mobile variant). | `admin_mobile_light_management.png` | Wrap in `.table-scroll` with right-edge fade mask; on `< 640px` render the table as a stacked card list. |
 | `admin-dashboard.html` stat cards | Four-across grid collapses to two-across then the dashes look like zero values. | `admin_mobile_light_overview.png` | Single-column on `< 480px`; skeleton instead of dashes. |

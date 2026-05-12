@@ -721,11 +721,6 @@ class StepTracker {
             }
         });
 
-        // Spotify Widget
-        document.getElementById('spotifyWidget').addEventListener('click', () => {
-            this.openSpotifyPlaylist();
-        });
-
         // Close flyout when clicking outside (on overlay)
         document.addEventListener('click', (e) => {
             const flyout = document.getElementById('hamburgerFlyout');
@@ -2701,14 +2696,6 @@ class StepTracker {
         });
     }
 
-    // Spotify Playlist Function
-    openSpotifyPlaylist() {
-        // CxE EMEA Offsite 2026 official playlist
-        const playlistUrl = 'https://open.spotify.com/playlist/5ajf3ykIGO6jPqHNx6moOC?si=89f9bc7157424c6a';
-        window.open(playlistUrl, '_blank');
-        this.showMessage('🎵 Opening CxE EMEA 2026 playlist on Spotify!', 'success');
-    }
-
     openGitHubIssue(type) {
         const repoUrl = 'https://github.com/Manaiakalani/CxEEMEAStepTracker';
         let templateParam = '';
@@ -2862,38 +2849,29 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
     // --- Mobile header widget collapse (Item 13) ---
-    // On narrow viewports, relocate weather + spotify widgets into the hamburger
+    // On narrow viewports, relocate the weather widget into the hamburger
     // flyout so the header doesn't wrap across two rows.
     (function initMobileHeaderCollapse() {
         const headerStats = document.querySelector('.header .header-stats');
         const flyoutSlot = document.getElementById('flyoutMobileWidgets');
-        const spotify = document.getElementById('spotifyWidget');
         const weather = document.getElementById('weatherInfo');
-        if (!headerStats || !flyoutSlot || (!spotify && !weather)) return;
+        if (!headerStats || !flyoutSlot || !weather) return;
 
         const mql = window.matchMedia('(max-width: 480px)');
         const apply = () => {
-            const widgets = [spotify, weather].filter(Boolean);
             if (mql.matches) {
-                // Move into flyout slot (appended so hamburger stays leftmost via CSS order)
                 flyoutSlot.setAttribute('aria-hidden', 'false');
-                widgets.forEach(w => {
-                    if (w.parentElement !== flyoutSlot) flyoutSlot.appendChild(w);
-                });
+                if (weather.parentElement !== flyoutSlot) flyoutSlot.appendChild(weather);
             } else {
                 flyoutSlot.setAttribute('aria-hidden', 'true');
-                // Restore back to header-stats, keeping relative order: spotify, weather
-                // Hamburger is last in header-stats, so insert before it.
-                const hamburger = document.getElementById('hamburgerMenu');
-                widgets.forEach(w => {
-                    if (w.parentElement !== headerStats) {
-                        if (hamburger && hamburger.parentElement === headerStats) {
-                            headerStats.insertBefore(w, hamburger);
-                        } else {
-                            headerStats.appendChild(w);
-                        }
+                if (weather.parentElement !== headerStats) {
+                    const hamburger = document.getElementById('hamburgerMenu');
+                    if (hamburger && hamburger.parentElement === headerStats) {
+                        headerStats.insertBefore(weather, hamburger);
+                    } else {
+                        headerStats.appendChild(weather);
                     }
-                });
+                }
             }
         };
         apply();
@@ -2907,7 +2885,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Register service worker for offline support
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
+            // Use a relative URL so the SW also registers correctly when this
+            // app is served from a sub-path (e.g. GitHub Pages project site).
+            navigator.serviceWorker.register('./sw.js')
                 .then((registration) => {
                     console.log('Service Worker registered successfully:', registration.scope);
                     

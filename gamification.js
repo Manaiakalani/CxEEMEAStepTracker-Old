@@ -17,6 +17,14 @@
         { id: 'leaderboard-king',name: 'Leaderboard King',  emoji: '👑', description: 'Reach #1 on leaderboard',                check: (_u, ctx) => ctx.rank === 1 },
         { id: 'overachiever',    name: 'Overachiever',      emoji: '🌟', description: '150% of daily goal in one day',          check: (u, ctx) => ctx.todaySteps >= u.dailyGoal * 1.5 },
         { id: 'iron-will',       name: 'Iron Will',         emoji: '💪', description: '14-day streak',                          check: (u) => (u.streak && u.streak.current >= 14) },
+        // ── Munich landmark milestones (EMEA 2026) ───────────────────
+        { id: 'frauenkirche',    name: 'Frauenkirche Climber', emoji: '⛪', description: 'Walked the height of the twin Frauenkirche towers (10K steps)', check: (u, ctx) => ctx.todaySteps >= 10000 },
+        { id: 'viktualienmarkt', name: 'Marktstand Wanderer',  emoji: '🥨', description: 'Five laps of the Viktualienmarkt (8K steps)', check: (u, ctx) => ctx.todaySteps >= 8000 },
+        { id: 'isar-explorer',   name: 'Isar Explorer',        emoji: '🌊', description: 'Walked the Isar from Deutsches Museum to Englischer Garten (15K steps)', check: (u, ctx) => ctx.todaySteps >= 15000 },
+        { id: 'eg-grand-loop',   name: 'Garten Grand Looper',  emoji: '🌳', description: 'Looped the Englischer Garten via Chinesischer Turm + Kleinhesseloher See (14K)', check: (u, ctx) => ctx.todaySteps >= 14000 },
+        { id: 'schwabing-trek',  name: 'Schwabing Trekker',    emoji: '🏢', description: 'Perimeter of Microsoft Deutschland HQ on Walter-Gropius-Straße (12K)', check: (u, ctx) => ctx.todaySteps >= 12000 },
+        { id: 'nymphenburg',     name: 'Nymphenburg Royal',    emoji: '🏰', description: 'Marienplatz to Schloss Nymphenburg and back (16K steps)', check: (u, ctx) => ctx.todaySteps >= 16000 },
+        // ── Cumulative milestones ───────────────────────────────────
         { id: 'century-club',    name: 'Century Club',      emoji: '🎖️', description: '100K total steps',                       check: (u) => u.totalSteps >= 100000 },
         { id: 'quarter-million', name: 'Quarter Million',   emoji: '🏅', description: '250K total steps',                       check: (u) => u.totalSteps >= 250000 },
         { id: 'half-million',    name: 'Half Million',      emoji: '💎', description: '500K total steps',                       check: (u) => u.totalSteps >= 500000 },

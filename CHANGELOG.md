@@ -10,6 +10,43 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [3.0.0-emea] - 2026 EMEA refresh
 
+### 🎨 Cross-page design unification
+- **Unified design language across all 5 pages** (main app, live display, admin login stub, admin dashboard stub, admin SPA). Every surface now shares the EMEA Alpine / Forest / Edelweiss palette and the Fraunces (display) + Inter (body) + Inter Tight (numerics) type system.
+- **`live-display/`**: ditched the legacy Microsoft `--ms-blue` / `--ms-purple` palette in favour of `--brand-alpine` / `--brand-forest` / `--brand-edelweiss` (legacy `--ms-*` tokens kept as aliases for backwards compatibility). Hero title now renders in Fraunces with a light-alpine → edelweiss gradient that reads cleanly on the dark display. All `rgba(0,120,212,…)` shadows rewritten to `rgba(46,90,136,…)`.
+- **`admin-login.html` / `admin-dashboard.html` redirect stubs**: replaced the Microsoft blue→purple gradient with an Alpine→Forest gradient and switched from generic system fonts to Inter (Fraunces for the heading).
+- **Admin SPA (`admin/`)**: shifted shadcn `--primary` and `--ring` from MS-blue HSL `210 100% 42%` to Alpine HSL `210 49% 36%` (and dark-mode `210 53% 65%`). Loaded Fraunces / Inter / Inter Tight via tightened CSP and applied them in `index.css` (Fraunces for h1–h3, Inter Tight + tabular numerics for stat values).
+- **Welcome card**: restored opaque `--bg-card` background that the Refinement Layer 2 selector was inadvertently stripping, so the Bavarian diamond pattern no longer bleeds through the hero card.
+
+### 🎨 Refinement Layer 2 — UI/UX polish pass
+- **Removed Spotify integration** entirely (header widget, click handler, `openSpotifyPlaylist()` function, ~70 lines of CSS, plus all references in README/CHANGELOG/DESIGN_REVIEW). The header now hosts only weather + steps stat alongside the hamburger.
+- **New design tokens** (springy `--ease-spring` / `--ease-glide` / `--ease-snappy` curves, 4px-base spacing scale, layered `--shadow-{xs,sm,md,lg,pop}` system).
+- **Typography refinement**: Fraunces hero with tighter tracking; Inter Tight + tabular numerics on every step/stat number (no more digit jitter when counters tick).
+- **Surface polish**: cards lift on hover with calmer easing; nav buttons are pill-shaped with a deep-alpine gradient on the active state; leaderboard rows nudge `translateX(2px)` on hover.
+- **Interaction polish**: primary buttons get `translateY(-1px)` on hover and `scale(0.98)` on press (snaps back in 80ms); accessible focus rings (`2px var(--brand-alpine)` with 3px offset on interactive controls); softened modal scrim with `backdrop-filter: blur(4px) saturate(140%)`.
+- **Mobile dignity**: enforced 44px min touch targets on touch devices via `(hover: none) and (pointer: coarse)` media query.
+- **Reduced motion**: extended override that zeros out all Refinement Layer 2 transforms when `prefers-reduced-motion: reduce`.
+- All changes verified against the existing 177-test Playwright contract (chromium green; non-chromium failures are all pre-existing).
+
+### 🔒 Security & privacy hardening (post-public audit)
+- **Fixed XSS in live display** (`live-display/display.js`): user-controlled `name`, `team`, `message`, and `timeAgo` strings rendered into `innerHTML` are now run through a new `escapeHTML()` helper. Previously a participant could register a display name like `<img src=x onerror=…>` and it would execute on the kiosk.
+- **Validated `postMessage` origin** in the live display so a hostile framing page cannot trigger Supabase reads.
+- **Added Content-Security-Policy** `<meta>` tags to `index.html`, `live-display/index.html`, and `admin/index.html`. `frame-ancestors 'none'` blocks clickjacking; `connect-src` restricts data exfiltration to Supabase + Open-Meteo only; `object-src 'none'` blocks Flash/plugins.
+- **Truthful privacy copy**: rewrote the FAQ "data deletion" claim. The previous wording promised automated deletion within 14 days, but the repo has no scheduled cleanup job — it now accurately describes the manual purge by event organisers and the existing user-initiated "Clear my data" path.
+
+### 🚀 Hosting & security
+- **Migrated from Azure Static Web Apps to GitHub Pages** (`.github/workflows/pages.yml`). Deploys on every push to `main`, builds the admin SPA in CI, publishes the whole repo root as the Pages artifact. Removed `azure-static-web-apps-yellow-bay-0aace901e.yml`.
+- **Resolved 2 Dependabot alerts**: bumped Vite `^5.4.9 → ^6.4.2` (CVE: optimized deps `.map` path traversal) which transitively brings esbuild to `0.25.12` (CVE: dev-server CORS).
+- Made all root-relative asset paths **sub-path safe** so the app works at `https://manaiakalani.github.io/CxEEMEAStepTracker/` as well as at a custom domain root: `manifest.json` (`start_url`, `scope`), service-worker registration + precache list, admin Vite `base`, admin "back to main app" links, admin favicon href.
+
+### 🏅 Munich landmark badges & community touches
+- New **Munich-landmark milestone badges** in `gamification.js`: Frauenkirche Climber (10K), Marktstand Wanderer (8K Viktualienmarkt), Isar Explorer (15K), Garten Grand Looper (14K), Schwabing Trekker (12K, Microsoft DE HQ perimeter), Nymphenburg Royal (16K).
+- Added a **Munich Theme Days** section to the FAQ modal: Marienplatz Monday, Trachten Tuesday, Walking Shoes Wednesday, Trail Mix Thursday, Fancy Shoe Friday, Surfwelle Saturday.
+- Added a **Suggested Munich Routes** card in the FAQ with 7 real walking routes mapped to step counts (Marienplatz → Englischer Garten, Kleinhesseloher See loop, Eisbach Surfwelle, Olympiapark, Isar return, Nymphenburg).
+
+### 🧪 React admin audit (Vercel React Best Practices)
+- Verified `admin/` already follows the practices that matter: React Query for server state, no `useEffect`-for-derived-state, `useMemo` only where measurably useful, no premature `'use client'` (Vite SPA, none needed), stable list keys, route-level code splitting via `react-router`. No structural refactor required.
+- `admin/dist/` is committed (matches the parent static site's deployment model) and rebuilds cleanly on Vite 5.
+
 ### 🇩🇪 Munich & EMEA content
 - Defaulted weather widget to **Munich, DE** (48.1351, 11.5820, `Europe/Berlin` timezone) via Open-Meteo.
 - Replaced Pacific-Northwest challenges with **Munich-themed** equivalents: Frauenkirche Tower Climb, Viktualienmarkt Power Walk, Microsoft Schwabing Trek, Isar River Shoreline, Englischer Garten Grand Loop. Kept Microsoft heritage challenges (Clippy, Windows 95, Master Chief).
@@ -32,13 +69,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🎯 Emil Kowalski – style fit-and-finish
 - Standardised duration tiers: 120ms press, 180ms tooltip, 240ms tab/dropdown, 360ms modal/drawer.
 - Tactile `scale(0.97)` press on every button with the existing `cubic-bezier(0.23, 1, 0.32, 1)` easing.
-- 1px hairline borders (`rgba(27,39,51,0.08)` light / `rgba(237,230,210,0.08)` dark) replacing solid borders on cards, leaderboard rows, modals, weather/Spotify widgets.
+- 1px hairline borders (`rgba(27,39,51,0.08)` light / `rgba(237,230,210,0.08)` dark) replacing solid borders on cards, leaderboard rows, modals, weather widgets.
 - Inset-light highlight on dark cards (`box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06)`) for crispness.
 
 ### 📱 Mobile-first hardening
 - Enforced ≥44×44 px tap targets on all primary controls (nav, hamburger, modal close, theme toggle, quick actions).
 - `env(safe-area-inset-*)` padding on header / footer / app container.
-- CLS reservations (`min-height` / `min-width`) on weather widget, Spotify widget, and primary stat values.
+- CLS reservations (`min-height` / `min-width`) on weather widget, and primary stat values.
 - `overscroll-behavior: contain` on leaderboard, leaderboard list, and activity feed.
 - Service worker `CACHE_VERSION` bumped to `2026-emea-001` so returning visitors hard-refresh.
 
@@ -177,7 +214,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - **Real Weather Integration**: Live Open-Meteo API with clothing recommendations
 - **Dark Mode Support**: Full dark theme with system preference detection
 - **PWA Capabilities**: Offline support with service worker caching
-- **Spotify Integration**: Official CxE EMEA 2026 playlist
 - **Overachiever System**: Advanced recognition with multiple criteria
 - **Live Notifications**: Real-time achievement alerts with animations
 - **Multi-language Greetings**: 12 international welcome messages
@@ -234,7 +270,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 | 2.3.0 | 2025-09-24 | Database & Admin | Supabase, Admin Dashboard, Live Display |
 | 2.2.0 | 2025-09-11 | Premium UX | Hamburger menu redesign, micro-interactions |
 | 2.1.0 | 2025-09-03 | Refined | CxE LT team, interactive footer |
-| 2.0.0 | 2025-08-28 | Enterprise | Weather, Dark mode, PWA, Spotify |
+| 2.0.0 | 2025-08-28 | Enterprise | Weather, Dark mode, PWA |
 | 1.5.0 | 2025-08-27 | Enhanced Competition | Challenges, activity widget |
 | 1.0.0 | 2025-08-26 | Foundation | Initial release |
 
