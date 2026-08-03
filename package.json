@@ -11,7 +11,7 @@
     "test:smoke": "node scripts/smoke.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "^1.60.0",
+    "@playwright/test": "^1.62.1",
     "http-server": "^14.1.1"
   }
 }
